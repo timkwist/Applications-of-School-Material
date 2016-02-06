@@ -15,14 +15,26 @@ class KuhnTree:
 			else:
 				print("At node", currentNode, ", Player", self.currentPlayer, "can chose the option of", key,
 				"leading to a payoff of", value)
+				
+	def simplePrintTree(self, pastString="", level = 0):
+		for key, value in self.possibleOptions.items():
+			if type(value) is list:
+				print("%s %s:%s --> %s" % (pastString, self.currentPlayer, key, value))
+			else:
+				value.simplePrintTree(pastString + "%s:%s --> " % (self.currentPlayer, key), level=level+1)
 
 prisonersDilemma = KuhnTree(player = 1, 
 						    possibleOptions = {
-									"Testify": KuhnTree(player = 2), 
-									"Don't Testify": KuhnTree(player = 2)
+									"Testify": KuhnTree(player = 2,
+														possibleOptions = {
+																"Testify": [-2, -2],
+																"Don't Testify": [0, -3]
+																}), 
+									"Don't Testify": KuhnTree(player = 2,
+															possibleOptions = {
+																	"Testify": [-3, 0],
+																	"Don't Testify": [1, 1]
+															})
 									})
-prisonersDilemma.possibleOptions["Testify"].addOption("Testify", [-2, -2])
-prisonersDilemma.possibleOptions["Testify"].addOption("Don't Testify", [0, -3])
-prisonersDilemma.possibleOptions["Don't Testify"].addOption("Testify", [-3, 0])
-prisonersDilemma.possibleOptions["Don't Testify"].addOption("Don't Testify", [1, 1])
 prisonersDilemma.printTree()
+prisonersDilemma.simplePrintTree()
